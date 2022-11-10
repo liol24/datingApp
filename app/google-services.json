@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "14375207959",
+    "project_id": "finalcapstone-e0849",
+    "storage_bucket": "finalcapstone-e0849.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:14375207959:android:25a2c6d8a6682882358852",
+        "android_client_info": {
+          "package_name": "com.cockandroid.finalcapstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "14375207959-kve2t12ahsrk77ha8hnmhun1f8p5nvuj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWzQIqTqQu4thQz7ttHA9t30WK6r87jLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "14375207959-kve2t12ahsrk77ha8hnmhun1f8p5nvuj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
