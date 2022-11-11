@@ -8,8 +8,10 @@ import android.view.View
 import android.widget.ImageView
 import com.cockandroid.finalcapstone.auth.IntroActivity
 import com.cockandroid.finalcapstone.auth.UserDataModel
+import com.cockandroid.finalcapstone.setting.SettingActivity
 import com.cockandroid.finalcapstone.slider.CardStackAdapter
 import com.cockandroid.finalcapstone.utils.FirebaseRef
+import com.cockandroid.finalcapstone.utils.FirebaseRef.Companion.database
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -27,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     private var TAG ="MainActivity"
 
+    private var usersDataList = mutableListOf<UserDataModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,10 +38,10 @@ class MainActivity : AppCompatActivity() {
         val setting = findViewById<ImageView>(R.id.settingIcon)
         setting.setOnClickListener {
 
-            val auth = Firebase.auth
-            auth.signOut()
-
-            val intent = Intent(this,IntroActivity::class.java)
+//            val auth = Firebase.auth
+//            auth.signOut()
+//
+            val intent = Intent(this,SettingActivity::class.java)
             startActivity(intent)
 
         }
@@ -70,12 +74,8 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        val testList = mutableListOf<String>()
-        testList.add("a")
-        testList.add("b")
-        testList.add("c")
 
-        cardStackAdapter = CardStackAdapter(baseContext, testList)
+        cardStackAdapter = CardStackAdapter(baseContext, usersDataList)
         cardStackView.layoutManager = manager
         cardStackView.adapter = cardStackAdapter
 
@@ -86,13 +86,17 @@ class MainActivity : AppCompatActivity() {
     private fun getUserDataList(){
 
         val postListener = object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 for(dataModel in dataSnapshot.children){
-                    Log.d(TAG,dataModel.toString())
-                    val post = dataModel.getValue(UserDataModel::class.java)
-                    Log.d(TAG, post?.nickname.toString())
+
+                    val user = dataModel.getValue(UserDataModel::class.java)
+                    usersDataList.add(user!!)
+
                 }
+
+                cardStackAdapter.notifyDataSetChanged()
 
             }
 
