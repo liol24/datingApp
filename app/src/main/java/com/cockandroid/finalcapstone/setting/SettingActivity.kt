@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.cockandroid.finalcapstone.R
 import com.cockandroid.finalcapstone.auth.IntroActivity
+import com.cockandroid.finalcapstone.message.MyLikeListActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -17,6 +18,12 @@ class SettingActivity : AppCompatActivity() {
         val mybtn = findViewById<Button>(R.id.myPageBtn)
         mybtn.setOnClickListener {
             val intent = Intent(this,MyPageActivity::class.java)
+            startActivity(intent)
+        }
+
+        val myLikeList = findViewById<Button>(R.id.myLikeList)
+        myLikeList.setOnClickListener {
+            val intent = Intent(this,MyLikeListActivity::class.java)
             startActivity(intent)
         }
 

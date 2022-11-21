@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private var userCount = 0
 
-//    private lateinit var currentUserGender: String  - 다른성별 불러오기
+    private lateinit var currentUserUid: String
 
     private var uid = FirebaseAuthUtils.getUid()
 
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 userCount = userCount+1
 
                 if(userCount == usersDataList.count()){
-                    getUserDataList(/*currentUserGender - 다른성별 불러오기 */)
+                    getUserDataList(currentUserUid)
                 }
 
             }
@@ -112,36 +112,34 @@ class MainActivity : AppCompatActivity() {
         cardStackView.layoutManager = manager
         cardStackView.adapter = cardStackAdapter
 
-        getUserDataList()
-//        getMyUserData() - 다른성별 불러오기
+//        getUserDataList()
+        getMyUserData()
 
     }
 
-//    private fun getMyUserData(){
-//        val postListener = object : ValueEventListener {
-//
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//
-//                Log.d(TAG,dataSnapshot.toString())
-//                val data = dataSnapshot.getValue(UserDataModel::class.java)
-//
-//                currentUserGender = data?.gender.toString()
-//
-//                getUserDataList(data?.gender.toString())
-//
-//
-//
-//            }
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//                // Getting Post failed, log a message
-//                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-//            }
-//        }
-//        FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
-//    }  -  다른성별 불러오기
+    private fun getMyUserData(){
+        val postListener = object : ValueEventListener {
 
-   private fun getUserDataList(/*currentUserGender:String  다른성별 불러오기 */){
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                Log.d(TAG,dataSnapshot.toString())
+                val data = dataSnapshot.getValue(UserDataModel::class.java)
+
+                currentUserUid = data?.uid.toString()
+
+                getUserDataList(currentUserUid)
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        FirebaseRef.userInfoRef.child(uid).addValueEventListener(postListener)
+    }
+
+   private fun getUserDataList(currentUserUid : String){
 
         val postListener = object : ValueEventListener {
 
@@ -151,13 +149,12 @@ class MainActivity : AppCompatActivity() {
 
                     val user = dataModel.getValue(UserDataModel::class.java)
 
-//                    if(user!!.gender.toString().equals(currentUserGender)){
-//
-//                    }else{
-//                        usersDataList.add(user!!)
-//                    }  -  다른성별 불러오기
+                    if(user!!.uid.toString().equals(currentUserUid)){
 
-                    usersDataList.add(user!!)
+                    }else{
+                        usersDataList.add(user!!)
+                    }
+
 
                 }
 

@@ -14,11 +14,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.cockandroid.finalcapstone.MainActivity
 import com.cockandroid.finalcapstone.R
 import com.cockandroid.finalcapstone.utils.FirebaseRef
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
 
@@ -76,19 +78,36 @@ class JoinActivity : AppCompatActivity() {
                         val user = auth.currentUser
                         uid=user?.uid.toString()
 
-                        val userModel = UserDataModel(
-                            uid,
-                            nickname,
-                            age,
-                            gender,
-                            city
-                        )
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                            OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                                return@OnCompleteListener
+                            }
 
-                        FirebaseRef.userInfoRef.child(uid).setValue(userModel)
-                        uploadImage(uid)
+                            // Get new FCM registration token
+                            val token = task.result
 
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
+
+                            Log.e(TAG, token.toString())
+
+                                val userModel = UserDataModel(
+                                    uid,
+                                    nickname,
+                                    age,
+                                    gender,
+                                    city,
+                                    token
+                                )
+
+                                FirebaseRef.userInfoRef.child(uid).setValue(userModel)
+                                uploadImage(uid)
+
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                        })
+
+
 
                     } else {
                         // If sign in fails, display a message to the user.
