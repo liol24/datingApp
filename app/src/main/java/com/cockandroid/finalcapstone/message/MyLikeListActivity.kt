@@ -1,5 +1,6 @@
 package com.cockandroid.finalcapstone.message
 
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,11 +8,17 @@ import android.widget.ListView
 import android.widget.Toast
 import com.cockandroid.finalcapstone.R
 import com.cockandroid.finalcapstone.auth.UserDataModel
+import com.cockandroid.finalcapstone.message.fcm.NotiModel
+import com.cockandroid.finalcapstone.message.fcm.PushNotification
+import com.cockandroid.finalcapstone.message.fcm.RetrofitInstance
 import com.cockandroid.finalcapstone.utils.FirebaseAuthUtils
 import com.cockandroid.finalcapstone.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MyLikeListActivity : AppCompatActivity() {
 
@@ -36,6 +43,11 @@ class MyLikeListActivity : AppCompatActivity() {
 
         userListView.setOnItemClickListener { adapterView, view, i, l ->
             checkMatching(likeUserList[i].uid.toString())
+
+            val notiModel = NotiModel("a","b")
+            val pushModel = PushNotification(notiModel,likeUserList[i].token.toString())
+            testPush(pushModel)
+
         }
 
     }
@@ -127,6 +139,10 @@ class MyLikeListActivity : AppCompatActivity() {
         }
         FirebaseRef.userInfoRef.addValueEventListener(postListener)
 
+    }
+
+    private fun testPush(notification : PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        RetrofitInstance.api.postNotification(notification)
     }
 
 }
